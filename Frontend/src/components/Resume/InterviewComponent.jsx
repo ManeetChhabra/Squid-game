@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import {
-  PaperAirplaneIcon,
-  BookOpenIcon, // <-- Importing the BookOpenIcon
-} from "@heroicons/react/24/solid";
+import { PaperAirplaneIcon, BookOpenIcon } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_KEY = "AIzaSyAtV8nuqqKXDNbJ3yahxqGfzWxMBB-RmvU";
+const API_KEY = "AIzaSyBcRPoW4qAVmkhW-oODcxUCDPQO9T5Dwp4"; // Replace with your actual API key
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 const InterviewComponent = () => {
@@ -26,25 +23,27 @@ const InterviewComponent = () => {
     { id: 6, title: "Lesson 06: Loops and Iterations", time: "30 mins" },
   ];
 
-  // Pastel background colors for each lesson item (to alternate, if desired)
+  // Pastel background colors for each lesson item
   const backgroundColors = [
-    "bg-[#FDF2EC]", // peach
-    "bg-[#FEECEC]", // light pink
+    "bg-[#FDF2EC]",
+    "bg-[#FEECEC]",
     "bg-[#FDF2EC]",
     "bg-[#FEECEC]",
     "bg-[#FDF2EC]",
     "bg-[#FEECEC]",
   ];
 
-  // Fetch a new interview question based on the selected skill
+  // Fetch a new interview question from the AI using generateText
   const getNewQuestion = async () => {
     setLoading(true);
-    setFeedback(""); // clear previous feedback
+    setFeedback(""); // Clear previous feedback
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      // Use "text-bison" model with generateText (not generateContent)
+      const model = genAI.getGenerativeModel({ model: "text-bison" });
       const prompt = `Ask a tough mock interview question for software engineers focused on ${skill}.`;
-      const response = await model.generateContent(prompt);
-      const text = (await response.response.text()).replace(/\*/g, "");
+      const response = await model.generateText(prompt);
+      // Assuming response.text contains the generated text
+      const text = response.text.replace(/\*/g, "");
       setQuestion(text);
     } catch (error) {
       console.error("Error fetching question:", error);
@@ -53,15 +52,15 @@ const InterviewComponent = () => {
     setLoading(false);
   };
 
-  // Submit the user's answer and get AI feedback
+  // Evaluate the user's answer and display AI feedback using generateText
   const evaluateAnswer = async () => {
     if (!userAnswer) return;
     setLoading(true);
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "text-bison" });
       const prompt = `Evaluate this interview answer: "${userAnswer}". Provide constructive feedback and a rating from 1 to 10.`;
-      const response = await model.generateContent(prompt);
-      const text = (await response.response.text()).replace(/\*/g, "");
+      const response = await model.generateText(prompt);
+      const text = response.text.replace(/\*/g, "");
       setFeedback(text);
     } catch (error) {
       console.error("Error evaluating answer:", error);
@@ -76,7 +75,7 @@ const InterviewComponent = () => {
 
   return (
     <div className="flex mt-24 min-h-screen">
-      {/* --- NEW SIDEBAR --- */}
+      {/* Sidebar */}
       <aside className="w-1/4 bg-white p-6 text-gray-800">
         <h2 className="text-xl font-extrabold mb-6 uppercase">PRACTICE QUIZ</h2>
         <div className="space-y-4">
@@ -85,21 +84,17 @@ const InterviewComponent = () => {
               key={lesson.id}
               className={`flex items-center justify-between p-4 rounded-md shadow-sm ${backgroundColors[index]}`}
             >
-              {/* Left Section: Icon + Lesson Title */}
               <div className="flex items-center space-x-2">
                 <BookOpenIcon className="h-5 w-5 text-gray-600" />
                 <span className="font-semibold text-gray-700 text-sm">
                   {lesson.title}
                 </span>
               </div>
-              {/* Right Section: Duration */}
               <span className="text-sm text-gray-600">{lesson.time}</span>
             </div>
           ))}
         </div>
       </aside>
-      {/* --- END NEW SIDEBAR --- */}
-
       {/* Main Content */}
       <div className="w-3/4 p-10 bg-white">
         <motion.header
@@ -117,7 +112,9 @@ const InterviewComponent = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <h3 className="text-xl font-bold mb-4">Instructions: Please Read Carefully</h3>
+          <h3 className="text-xl font-bold mb-4">
+            Instructions: Please Read Carefully
+          </h3>
           <ul className="list-disc list-inside text-gray-800 leading-6 text-sm space-y-2">
             <li>
               <strong>Answer the Questions:</strong> Each question has an input field
