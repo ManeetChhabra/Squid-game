@@ -44,6 +44,7 @@ import CourseHeader from "./components/CoursePage/CourseHeader";
 import JobApplyPage from "./components/JobPage/JobApplyPage";
 import RecommendedJobs from "./components/JobPage/RecommendedJobs";
 import JobHeader from "./components/Jobposting/JobHeader";
+import JobList from "./components/Jobposting/JobList.jsx";
 import JobPostingForm from "./components/Jobposting/JobPostingForm";
 import VideoCallHeader from "./components/Videocall/VideoCallHeader";
 import MentorCard from "./components/Videocall/MentorCard";
@@ -182,6 +183,7 @@ const App = () => {
           path="/Jobposting"
           element={
             <div>
+              <JobList/>
               <JobHeader />
               <JobPostingForm />
            
