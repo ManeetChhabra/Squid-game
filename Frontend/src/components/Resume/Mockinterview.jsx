@@ -216,11 +216,13 @@ Ensure that the JSON is properly formatted.`
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-6 text-center">AI Skill Assessment</h1>
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg border border-orange-200 animate-fadeIn">
+      <h1 className="text-3xl font-bold mb-6 text-center text-orange-600 animate-bounce">
+        AI Skill Assessment
+      </h1>
 
       {error && (
-        <div className="mb-6 p-3 bg-red-100 text-red-700 rounded">
+        <div className="mb-6 p-3 bg-orange-100 text-orange-800 rounded border border-orange-300">
           <strong>Error:</strong>
           <p>{error}</p>
         </div>
@@ -229,14 +231,16 @@ Ensure that the JSON is properly formatted.`
       {/* Skill selection (shown only if the assessment hasn't started) */}
       {!assessmentStarted && (
         <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-4">Select a Skill</h2>
+          <h2 className="text-lg font-semibold mb-4 text-orange-600">Select a Skill</h2>
           <div className="grid grid-cols-2 gap-3 mb-4">
             {skills.map((skill) => (
               <button
                 key={skill}
                 onClick={() => setSelectedSkill(skill)}
-                className={`p-3 border rounded-lg text-center transition-colors ${
-                  selectedSkill === skill ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-50'
+                className={`p-3 border rounded-lg text-center transition-transform transform hover:scale-105 ${
+                  selectedSkill === skill
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-white hover:bg-orange-50'
                 }`}
               >
                 {skill}
@@ -246,7 +250,7 @@ Ensure that the JSON is properly formatted.`
           <button
             onClick={fetchQuestions}
             disabled={!selectedSkill || isLoading}
-            className="mt-3 px-4 py-3 bg-green-500 text-white rounded-lg w-full"
+            className="mt-3 px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg w-full transition-colors duration-300"
           >
             {isLoading ? 'Generating Questions...' : 'Start Assessment'}
           </button>
@@ -255,16 +259,16 @@ Ensure that the JSON is properly formatted.`
 
       {/* Display questions */}
       {questions.length > 0 && currentQuestionIndex < questions.length && (
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+        <div className="mb-6 p-4 border rounded-lg bg-orange-50 animate-fadeIn">
           <div className="flex justify-between mb-4 items-center">
-            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+            <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full">
               Question {currentQuestionIndex + 1}/{questions.length}
             </span>
-            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+            <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full">
               Score: {score}/{totalAnswered}
             </span>
           </div>
-          <div className="bg-white p-4 rounded-lg mb-4 shadow-sm">
+          <div className="bg-white p-4 rounded-lg mb-4 shadow-sm border border-orange-100">
             <p className="text-lg font-medium mb-4">
               {questions[currentQuestionIndex].question}
             </p>
@@ -273,10 +277,10 @@ Ensure that the JSON is properly formatted.`
                 <div
                   key={index}
                   onClick={() => !evaluation && setUserAnswer(option.charAt(0))}
-                  className={`p-3 rounded-lg cursor-pointer border ${
+                  className={`p-3 rounded-lg cursor-pointer border transition-colors transform hover:bg-orange-50 ${
                     userAnswer === option.charAt(0)
-                      ? 'bg-blue-50 border-blue-300'
-                      : 'hover:bg-gray-50'
+                      ? 'bg-orange-100 border-orange-400'
+                      : ''
                   }`}
                 >
                   <div className="flex items-center">
@@ -301,7 +305,7 @@ Ensure that the JSON is properly formatted.`
               <button
                 onClick={evaluateAnswer}
                 disabled={!userAnswer || isLoading}
-                className="w-full px-4 py-3 bg-blue-500 text-white rounded-lg"
+                className="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-300"
               >
                 Submit Answer
               </button>
@@ -309,27 +313,31 @@ Ensure that the JSON is properly formatted.`
           </div>
           {evaluation && (
             <div
-              className={`mt-4 p-4 rounded-lg ${evaluation.isCorrect ? 'bg-green-50' : 'bg-red-50'}`}
+              className={`mt-4 p-4 rounded-lg transition-colors duration-300 ${
+                evaluation.isCorrect
+                  ? 'bg-orange-100 border border-orange-300'
+                  : 'bg-orange-200 border border-orange-400'
+              }`}
             >
               <strong>
                 {evaluation.isCorrect
                   ? '✓ Correct!'
                   : `✗ Incorrect. Correct answer is ${evaluation.correctAnswer}.`}
               </strong>
-              <div className="mt-2 p-3 bg-white rounded-lg">
+              <div className="mt-2 p-3 bg-white rounded-lg shadow-sm border border-orange-100">
                 <p>Explanation: {evaluation.explanation}</p>
               </div>
               {currentQuestionIndex < questions.length - 1 ? (
                 <button
                   onClick={nextQuestion}
-                  className="mt-4 w-full px-4 py-3 bg-blue-500 text-white rounded-lg"
+                  className="mt-4 w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-transform transform hover:scale-105"
                 >
                   Next Question
                 </button>
               ) : (
                 <button
                   onClick={() => setAssessmentComplete(true)}
-                  className="mt-4 w-full px-4 py-3 bg-purple-500 text-white rounded-lg"
+                  className="mt-4 w-full px-4 py-3 bg-orange-700 hover:bg-orange-800 text-white rounded-lg transition-transform transform hover:scale-105"
                 >
                   Complete Assessment
                 </button>
@@ -337,15 +345,15 @@ Ensure that the JSON is properly formatted.`
             </div>
           )}
           {assessmentComplete && (
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border">
-              <h2 className="text-xl font-bold mb-3 text-center">Results</h2>
+            <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200 animate-pulse">
+              <h2 className="text-2xl font-bold mb-3 text-center text-orange-600">Results</h2>
               <p className="text-center text-lg">
                 Final Score: {score}/{questions.length}
               </p>
-              <p className="text-center mt-2">{generateFeedback()}</p>
+              <p className="text-center mt-2 text-orange-700">{generateFeedback()}</p>
               <button
                 onClick={resetAssessment}
-                className="mt-3 w-full px-4 py-3 bg-green-500 text-white rounded-lg"
+                className="mt-3 w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-300"
               >
                 Start New Assessment
               </button>
