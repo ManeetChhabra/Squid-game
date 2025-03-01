@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 const Mockinterview = () => {
-  // Set your Gemini 2.0 Flash API key here.
-  // For the free model, you may leave it empty to use fallback questions.
+  // Set your Gemini API key here. Leave empty to use fallback questions.
   const GEMINI_API_KEY = "AIzaSyAQOWGKd2XS-fyNWrCWfDWNCqUGwvo03Fw"; 
 
   const [skills] = useState([
@@ -10,6 +9,10 @@ const Mockinterview = () => {
     'Algorithms', 'System Design', 'SQL', 'Machine Learning', 'CSS',
     'HTML', 'Docker', 'Kubernetes', 'AWS', 'Git', 'DevOps'
   ]);
+
+  // New state for difficulty
+  const [difficulty, setDifficulty] = useState("Easy");
+
   const [selectedSkill, setSelectedSkill] = useState('');
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -40,7 +43,9 @@ const Mockinterview = () => {
         let result = safeJsonParse(jsonString);
         if (!result.success) {
           // Attempt a simple sanitization if initial parse fails
-          const sanitized = jsonString.replace(/\n/g, ' ').replace(/,\s*\]/g, ']');
+          const sanitized = jsonString
+            .replace(/\n/g, ' ')
+            .replace(/,\s*\]/g, ']');
           result = safeJsonParse(sanitized);
         }
         return result;
@@ -52,7 +57,7 @@ const Mockinterview = () => {
     }
   };
 
-  // Fetch questions from the Gemini 2.0 Flash API or use fallback questions if no API key is provided.
+  // Fetch questions from the Gemini API or use fallback questions
   const fetchQuestions = async () => {
     if (!selectedSkill) return;
 
@@ -66,7 +71,7 @@ const Mockinterview = () => {
       const fallbackQuestions = Array(5)
         .fill(null)
         .map((_, index) => ({
-          question: `Fallback Question ${index + 1} for ${selectedSkill}`,
+          question: `Fallback Question ${index + 1} for ${selectedSkill} (${difficulty} difficulty)`,
           options: [
             "A. Option 1",
             "B. Option 2",
@@ -88,7 +93,6 @@ const Mockinterview = () => {
     }
 
     try {
-      // Use the Gemini 2.0 Flash model endpoint.
       const response = await fetch(
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
         {
@@ -100,7 +104,7 @@ const Mockinterview = () => {
           body: JSON.stringify({
             contents: [{
               parts: [{
-                text: `Generate 5 multiple-choice objective questions to assess knowledge of ${selectedSkill}. 
+                text: `Generate 5 multiple-choice objective questions to assess knowledge of ${selectedSkill} at a ${difficulty.toLowerCase()} difficulty level.
 For each question provide:
 1. The question text (with increasing difficulty)
 2. Four possible answers labeled A, B, C, D
@@ -216,19 +220,20 @@ Ensure that the JSON is properly formatted.`
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg border border-orange-200 animate-fadeIn">
-      <h1 className="text-3xl font-bold mb-6 text-center text-orange-600 animate-bounce">
-        AI Skill Assessment
-      </h1>
+    <div className="max-w-2xl mt-24 mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-6 text-center text-orange-600">AI Skill Assessment</h1>
 
       {error && (
-        <div className="mb-6 p-3 bg-orange-100 text-orange-800 rounded border border-orange-300">
+        <div className="mb-6 p-3 bg-red-100 text-red-700 rounded">
           <strong>Error:</strong>
           <p>{error}</p>
+          {error.includes('API') && (
+            <small>Please check your API key or use fallback questions.</small>
+          )}
         </div>
       )}
 
-      {/* Skill selection (shown only if the assessment hasn't started) */}
+      {/* Skill selection and difficulty dropdown (shown only if the assessment hasn't started) */}
       {!assessmentStarted && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-4 text-orange-600">Select a Skill</h2>
@@ -237,7 +242,7 @@ Ensure that the JSON is properly formatted.`
               <button
                 key={skill}
                 onClick={() => setSelectedSkill(skill)}
-                className={`p-3 border rounded-lg text-center transition-transform transform hover:scale-105 ${
+                className={`p-3 border rounded-lg text-center transition-colors ${
                   selectedSkill === skill
                     ? 'bg-orange-500 text-white'
                     : 'bg-white hover:bg-orange-50'
@@ -247,10 +252,26 @@ Ensure that the JSON is properly formatted.`
               </button>
             ))}
           </div>
+          {/* Dropdown to select difficulty */}
+          <div className="mb-4">
+            <label htmlFor="difficulty" className="block mb-2 font-medium text-orange-600">
+              Choose Difficulty:
+            </label>
+            <select
+              id="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+              className="p-2 border rounded-lg w-full"
+            >
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
           <button
             onClick={fetchQuestions}
             disabled={!selectedSkill || isLoading}
-            className="mt-3 px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg w-full transition-colors duration-300"
+            className="mt-3 px-4 py-3 bg-orange-500 text-white rounded-lg w-full"
           >
             {isLoading ? 'Generating Questions...' : 'Start Assessment'}
           </button>
@@ -259,7 +280,7 @@ Ensure that the JSON is properly formatted.`
 
       {/* Display questions */}
       {questions.length > 0 && currentQuestionIndex < questions.length && (
-        <div className="mb-6 p-4 border rounded-lg bg-orange-50 animate-fadeIn">
+        <div className="mb-6 p-4 border rounded-lg bg-orange-50">
           <div className="flex justify-between mb-4 items-center">
             <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full">
               Question {currentQuestionIndex + 1}/{questions.length}
@@ -268,44 +289,45 @@ Ensure that the JSON is properly formatted.`
               Score: {score}/{totalAnswered}
             </span>
           </div>
-          <div className="bg-white p-4 rounded-lg mb-4 shadow-sm border border-orange-100">
+          <div className="bg-white p-4 rounded-lg mb-4 shadow-sm">
             <p className="text-lg font-medium mb-4">
               {questions[currentQuestionIndex].question}
             </p>
             <div className="space-y-3 mb-4">
-              {questions[currentQuestionIndex].options.map((option, index) => (
-                <div
-                  key={index}
-                  onClick={() => !evaluation && setUserAnswer(option.charAt(0))}
-                  className={`p-3 rounded-lg cursor-pointer border transition-colors transform hover:bg-orange-50 ${
-                    userAnswer === option.charAt(0)
-                      ? 'bg-orange-100 border-orange-400'
-                      : ''
-                  }`}
-                >
-                  <div className="flex items-center">
+              {questions[currentQuestionIndex].options.map((option, idx) => {
+                const answerKey = option.charAt(0); // e.g. 'A', 'B', ...
+                return (
+                  <label
+                    key={idx}
+                    htmlFor={`option-${idx}`}
+                    // Only allow selecting if there's no evaluation
+                    onClick={() => !evaluation && setUserAnswer(answerKey)}
+                    className={`flex items-center p-3 rounded-lg cursor-pointer border ${
+                      userAnswer === answerKey
+                        ? 'bg-orange-50 border-orange-300'
+                        : 'hover:bg-orange-50'
+                    }`}
+                  >
                     <input
                       type="radio"
-                      id={`option-${index}`}
+                      id={`option-${idx}`}
                       name="answer"
-                      value={option.charAt(0)}
-                      checked={userAnswer === option.charAt(0)}
-                      onChange={() => setUserAnswer(option.charAt(0))}
+                      value={answerKey}
+                      checked={userAnswer === answerKey}
+                      onChange={() => setUserAnswer(answerKey)}
                       disabled={evaluation !== null}
-                      className="mr-3"
+                      className="mr-2"
                     />
-                    <label htmlFor={`option-${index}`} className="cursor-pointer">
-                      {option}
-                    </label>
-                  </div>
-                </div>
-              ))}
+                    <span>{option}</span>
+                  </label>
+                );
+              })}
             </div>
             {!evaluation && (
               <button
                 onClick={evaluateAnswer}
                 disabled={!userAnswer || isLoading}
-                className="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-300"
+                className="w-full px-4 py-3 bg-orange-500 text-white rounded-lg"
               >
                 Submit Answer
               </button>
@@ -313,10 +335,8 @@ Ensure that the JSON is properly formatted.`
           </div>
           {evaluation && (
             <div
-              className={`mt-4 p-4 rounded-lg transition-colors duration-300 ${
-                evaluation.isCorrect
-                  ? 'bg-orange-100 border border-orange-300'
-                  : 'bg-orange-200 border border-orange-400'
+              className={`mt-4 p-4 rounded-lg ${
+                evaluation.isCorrect ? 'bg-orange-50' : 'bg-red-50'
               }`}
             >
               <strong>
@@ -324,20 +344,20 @@ Ensure that the JSON is properly formatted.`
                   ? '✓ Correct!'
                   : `✗ Incorrect. Correct answer is ${evaluation.correctAnswer}.`}
               </strong>
-              <div className="mt-2 p-3 bg-white rounded-lg shadow-sm border border-orange-100">
+              <div className="mt-2 p-3 bg-white rounded-lg">
                 <p>Explanation: {evaluation.explanation}</p>
               </div>
               {currentQuestionIndex < questions.length - 1 ? (
                 <button
                   onClick={nextQuestion}
-                  className="mt-4 w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-transform transform hover:scale-105"
+                  className="mt-4 w-full px-4 py-3 bg-orange-500 text-white rounded-lg"
                 >
                   Next Question
                 </button>
               ) : (
                 <button
                   onClick={() => setAssessmentComplete(true)}
-                  className="mt-4 w-full px-4 py-3 bg-orange-700 hover:bg-orange-800 text-white rounded-lg transition-transform transform hover:scale-105"
+                  className="mt-4 w-full px-4 py-3 bg-orange-500 text-white rounded-lg"
                 >
                   Complete Assessment
                 </button>
@@ -345,15 +365,15 @@ Ensure that the JSON is properly formatted.`
             </div>
           )}
           {assessmentComplete && (
-            <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200 animate-pulse">
-              <h2 className="text-2xl font-bold mb-3 text-center text-orange-600">Results</h2>
+            <div className="mt-6 p-4 bg-orange-50 rounded-lg border">
+              <h2 className="text-xl font-bold mb-3 text-center text-orange-600">Results</h2>
               <p className="text-center text-lg">
                 Final Score: {score}/{questions.length}
               </p>
-              <p className="text-center mt-2 text-orange-700">{generateFeedback()}</p>
+              <p className="text-center mt-2">{generateFeedback()}</p>
               <button
                 onClick={resetAssessment}
-                className="mt-3 w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors duration-300"
+                className="mt-3 w-full px-4 py-3 bg-orange-500 text-white rounded-lg"
               >
                 Start New Assessment
               </button>
