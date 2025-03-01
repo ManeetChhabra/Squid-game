@@ -33,18 +33,33 @@ const InterviewComponent = () => {
     "bg-[#FEECEC]",
   ];
 
-  // Fetch a new interview question from the AI using generateText
+  // Fetch a new interview question using the Gemini model
   const getNewQuestion = async () => {
     setLoading(true);
     setFeedback(""); // Clear previous feedback
     try {
-      // Use "text-bison" model with generateText (not generateContent)
-      const model = genAI.getGenerativeModel({ model: "text-bison" });
-      const prompt = `Ask a tough mock interview question for software engineers focused on ${skill}.`;
-      const response = await model.generateText(prompt);
-      // Assuming response.text contains the generated text
-      const text = response.text.replace(/\*/g, "");
-      setQuestion(text);
+      // For Gemini-2.0-flash, try using predict first.
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const prompt = `Provide a list of 5 tough mock interview questions for software engineers focused on ${skill}.`;
+      let response;
+      if (typeof model.predict === "function") {
+        response = await model.predict({ prompt });
+      } else if (typeof model.generateText === "function") {
+        response = await model.generateText({ prompt });
+      } else if (typeof model.generate === "function") {
+        response = await model.generate({ prompt });
+      } else {
+        throw new Error("No valid generation method available on the model.");
+      }
+      
+      // Split the returned text into individual questions (assuming newline separation)
+      const questions = response.text
+        .split("\n")
+        .map((q) => q.trim())
+        .filter((q) => q.length > 0);
+      const randomQuestion =
+        questions[Math.floor(Math.random() * questions.length)];
+      setQuestion(randomQuestion.replace(/\*/g, ""));
     } catch (error) {
       console.error("Error fetching question:", error);
       setQuestion("Failed to fetch question. Try again.");
@@ -52,7 +67,7 @@ const InterviewComponent = () => {
     setLoading(false);
   };
 
-  // Evaluate the user's answer and display AI feedback using generateText
+  // Evaluate the user's answer and display AI feedback using text-bison model
   const evaluateAnswer = async () => {
     if (!userAnswer) return;
     setLoading(true);
