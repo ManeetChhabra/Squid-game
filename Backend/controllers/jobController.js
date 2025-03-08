@@ -56,41 +56,47 @@ export const getJobById = async (req, res) => {
 };
 
 // Apply for a Job (Only students can apply)
-/*export const applyForJob = async (req, res) => {
+export const applyForJob = async (req, res) => {
   try {
-    const { jobId } = req.params;
-    const { resume } = req.body; // Resume link or file path
+    console.log("🟢 User in applyForJob:", req.user);
 
-    // ✅ Check if resume is provided
-    if (!resume) {
-      return res.status(400).json({ message: "Resume is required to apply!" });
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized! User not found." });
     }
 
-    // ✅ Find the job by ID
+    const { jobId } = req.params;
     const job = await Job.findById(jobId);
+
     if (!job) {
       return res.status(404).json({ message: "Job not found!" });
     }
 
-    // ✅ Prevent duplicate applications
-    const alreadyApplied = job.applications.find((app) => app.applicant.toString() === req.user.id);
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is missing!" });
+    }
+
+    const alreadyApplied = job.applications.find((app) => app.applicant.toString() === userId);
     if (alreadyApplied) {
       return res.status(400).json({ message: "You have already applied for this job!" });
     }
 
-    // ✅ Add application to job
+    // ✅ Store Resume URL (Cloudinary provides the URL in req.file.path)
     job.applications.push({
-      applicant: req.user.id,
-      resume,
+      applicant: userId,
+      resume: req.file.path, // Cloudinary URL
     });
 
     await job.save();
     res.status(200).json({ message: "Application submitted successfully!" });
   } catch (error) {
+    console.error("❌ Server Error:", error);
     res.status(500).json({ message: "Server error!", error: error.message });
   }
-};*/
-export const applyForJob = async (req, res) => {
+};
+
+
+/*export const applyForJob = async (req, res) => {
     try {
       // Ensure a file (resume) is uploaded
       if (!req.file) {
@@ -105,7 +111,7 @@ export const applyForJob = async (req, res) => {
       return res.status(500).json({ message: "Internal server error", error: error.message });
     }
   };
-  
+  */
 
 // Delete Job (Only HR can delete)
 export const deleteJob = async (req, res) => {

@@ -15,6 +15,6 @@ router.get("/:jobId", getJobById); // Get a specific job
 //router.post("/apply/:jobId", authMiddleware, applyForJob); // Apply for a job (Only students)
 
 const upload = multer({ dest: "uploads/" });
-router.post("/apply/:jobId",  upload.single("resume"), applyForJob);
+router.post("/apply/:jobId", authMiddleware,upload.single("resume"), applyForJob);
 
 export default router;

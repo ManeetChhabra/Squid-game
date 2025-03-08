@@ -183,8 +183,9 @@ const App = () => {
           path="/Jobposting"
           element={
             <div>
-              <JobList/>
+             
               <JobHeader />
+              <JobList/>
               <JobPostingForm />
            
              

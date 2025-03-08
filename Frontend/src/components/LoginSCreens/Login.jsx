@@ -14,35 +14,41 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
-
+  
     try {
-      // With the updated baseURL, this calls: http://localhost:3015/api/v1/user/login
-      const response = await api.post("/user/login", { email, password });
+      // ✅ Ensure the request includes credentials (cookies)
+      const response = await api.post(
+        "/user/login",
+        { email, password },
+        { withCredentials: true } // Important for cookies to be stored
+      );
+  
       if (response.status === 200) {
         const { role } = response.data;
+  
         setLoginSuccess(true);
-
+  
         setTimeout(() => {
           setLoginSuccess(false);
           if (role === "student") {
             navigate("/dashboard");
           } else if (role === "instructor") {
             navigate("/publish");
+          } else if (role === "HR") {
+            navigate("/jobposting");
           } else {
             navigate("/");
           }
-        }, 3000);
+        }, 1500);
       }
     } catch (err) {
       console.error("Login error:", err);
-      setErrorMessage(
-        err.response?.data?.message || "Login failed. Please try again."
-      );
+      setErrorMessage(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">

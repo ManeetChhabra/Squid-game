@@ -58,6 +58,14 @@ const Navbar = () => {
         </li>
         <li>
           <Link
+            to="/jobposting"
+            className="cursor-pointer hover:text-orange-400 transition-all duration-300"
+          >
+            Jobs
+          </Link>
+        </li>
+        <li>
+          <Link
             to="/who-we-are"
             className="cursor-pointer hover:text-orange-400 transition-all duration-300"
           >

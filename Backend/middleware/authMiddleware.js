@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Extract token from "Bearer <token>"
+  console.log("Cookies in request:", req.cookies);
+//console.log("Authorization Header:", req.headers.authorization);
+
+  
+  const token = req.cookies.token; // ✅ Get token from cookies
 
   console.log("Received Token:", token); // Debugging output
 
@@ -11,8 +14,9 @@ export const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach user details to request
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.user = { id: decoded.id, role: decoded.role }; // Attach user details to request
+    console.log("Decoded User:", req.user); // ✅ Check if user ID is set
     next();
   } catch (error) {
     console.error("JWT verification error:", error.message);
