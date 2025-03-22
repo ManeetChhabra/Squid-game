@@ -61,7 +61,7 @@ import Mainheader from "./components/PreviewPage/Mainheader";
 import Publish from "./components/CoursePublish/Publish";
 import Resumeheader from "./components/Resume/ResumeHeader";
 import Quizdesign from "./components/QUizdesining/Quizdesign";
-import FeedbackForm from "./components/Feedback/Feedbackform";
+import FeedbackForm from "./components/Feedback/FeedbackForm";
 import { AuthProvider } from "../src/AuthContext";
 
 import PaymentSuccess from "./components/payment/UpiPaymentScreen";
