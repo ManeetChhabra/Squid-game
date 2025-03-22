@@ -215,7 +215,7 @@ const App = () => {
   issueDate="2025-02-16"
   geminiApiKey="AIzaSyAtV8nuqqKXDNbJ3yahxqGfzWxMBB-RmvU"
 />
-{/* <CertificateVerification/> */}
+ <CertificateVerification/> 
              
             </div>
           }
