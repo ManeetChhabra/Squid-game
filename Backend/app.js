@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173", // Update this URL as needed
+    origin: "https://skill-sensei-frontend.onrender.com", // Update this URL as needed
     credentials: true,
   })
 );
