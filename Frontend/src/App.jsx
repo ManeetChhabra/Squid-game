@@ -56,7 +56,7 @@ import ResumeBuilder from "./components/Resume/Resumebuilder";
 import Mockinterview from "./components/Resume/Mockinterview";
 import InterviewComponent from "./components/Resume/InterviewComponent";
 import LessonList from "./components/PreviewPage/LessonsList";
-import Lessonheader from "./components/PreviewPage/Lessonheader";
+import Lessonheader from "./components/PreviewPage/LessonHeader";
 import Mainheader from "./components/PreviewPage/Mainheader";
 import Publish from "./components/CoursePublish/Publish";
 import Resumeheader from "./components/Resume/ResumeHeader";
