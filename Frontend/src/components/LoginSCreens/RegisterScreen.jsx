@@ -62,7 +62,7 @@ const RegisterScreen = () => {
       <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-4xl">
         <div className="w-full md:w-1/2">
           <img
-            src="./src/assets/Images/ai-generated-8810198_1280.webp"
+            src="/Images/ai-generated-8810198_1280.webp"
             alt="Engineers working"
             className="object-cover w-full h-48 md:h-full"
           />

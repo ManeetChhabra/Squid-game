@@ -14,7 +14,7 @@ const JobHeader = () => {
         {/* Right Image Section */}
         <div className="md:w-1/2 flex justify-center relative">
           <div className="relative w-60 md:w-80">
-            <img src="./src/assets/Images/image 14.png" alt="AI Tutor" className="w-full" />
+            <img src="/Images/image 14.png" alt="AI Tutor" className="w-full" />
           </div>
         </div>
       </div>

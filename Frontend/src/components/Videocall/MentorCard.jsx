@@ -60,7 +60,7 @@ const MentorCard = () => {
         <div className="hidden md:block w-1/3 relative bg-orange-100">
           <div className="absolute inset-0">
             <img
-              src="./src/assets/Images/Illustration.png"
+              src="/Images/Illustration.png"
               alt="Teaching Mathematics"
               className="w-full h-full object-cover"
             />

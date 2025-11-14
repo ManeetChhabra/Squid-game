@@ -6,7 +6,7 @@ const teamMembers = [
     role: "UI/UX Designer, AI Lead",
     experience:
       "With over 10 years of experience in digital marketing, Kanishka leverages his dual expertise as a UI/UX Designer and AI Lead to create intuitive interfaces and cutting-edge AI solutions. An alumnus of NIT Surathkal, he has participated in 12+ international hackathons, winning 3, which underscores his innovative approach and commitment to excellence.",
-    image: "./src/assets/Images/kani.jpg",
+    image: "/Images/kani.jpg",
     linkedin: "https://www.linkedin.com/in/kanishka-pandey-b0277b292/"
   },
   {
@@ -14,7 +14,7 @@ const teamMembers = [
     role: "Frontend Lead",
     experience:
       "With 7+ years of experience in project management and team leadership, Urvashi excels as a Frontend Lead by combining technical acumen with creative design. She is also the first track prize winner at NIT Surathkal, a testament to her innovative spirit and dedication.",
-    image: "./src/assets/Images/Screenshot 2025-02-16 083643.png",
+    image: "/Images/Screenshot 2025-02-16 083643.png",
     linkedin: "https://www.linkedin.com/in/urvashi-marmat-b1b691290/"
   },
   {
@@ -22,7 +22,7 @@ const teamMembers = [
     role: "Backend Lead",
     experience:
       "With 5+ years of experience in backend development, Mufaddal is adept at building robust and scalable systems. His passion for innovation is further highlighted by his participation in 14+ hackathons, where he secured 3 wins.",
-    image: "./src/assets/Images/Screenshot 2025-02-16 083123.png",
+    image: "/Images/Screenshot 2025-02-16 083123.png",
     linkedin: "https://www.linkedin.com/in/mufaddal-ratlamwala/"
   },
   {
@@ -30,7 +30,7 @@ const teamMembers = [
     role: "Backend Developer, Blockchain Developer",
     experience:
       "With 3+ years of experience in backend and blockchain development, Maneet specializes in creating secure and efficient decentralized solutions.",
-    image: "./src/assets/Images/Screenshot 2025-02-16 083114.png",
+    image: "/Images/Screenshot 2025-02-16 083114.png",
     linkedin: "https://www.linkedin.com/in/maneet-singh-chhabra-b6bb35249/"
   }
 ];

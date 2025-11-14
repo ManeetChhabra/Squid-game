@@ -14,7 +14,7 @@ const Header = () => {
       >
         {/* https://cdn.pixabay.com/video/2024/04/20/208682_large.mp4 */}
         {/* https://cdn.pixabay.com/video/2023/10/01/183107-870151708_large.mp4 */}
-        <source src="../src/assets/Videos/bot.mp4" type="video/mp4" />
+        <source src="/Videos/bot.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 

@@ -73,10 +73,10 @@ import StudentDashboard from "./components/Dashboard/StudentDashboard.jsx";
 import Sublime from "./components/Sublime text/Sublime.jsx";
 import Courseweb from "./components/MasterUnion/Courseweb.jsx";
 const config = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
+  appName: 'SkillSensie',
+  projectId: import.meta.env.VITE_PROJECT_ID || 'YOUR_PROJECT_ID',
   chains: [mainnet, polygon, optimism, arbitrum, base],
-  ssr: true, // If your dApp uses server side rendering (SSR)
+  ssr: false, // Since this is a Vite app, not Next.js
 });
 
 const queryClient = new QueryClient();
