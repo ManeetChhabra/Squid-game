@@ -50,14 +50,19 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
+console.log("Setting cookie:", token);
+console.log("Response headers before sending:", res.getHeaders());
+
 
     // ✅ Set token in an HTTP-only cookie (automatic for future requests)
     res.cookie("token", token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === "production", // Enable secure cookies in production
-      sameSite: "Strict",
+      httpOnly: true,
+      secure: false, // ❌ Set to true only in production
+      sameSite: "Lax", // ✅ Works for most cases
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
+    
+
 
     res.status(200).json({ message: "Login successful", role: user.role });
   } catch (error) {
@@ -73,9 +78,10 @@ export const logoutUser = (req, res) => {
 };
 
 // Auth Check
-export const authCheck = (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
+export const authCheck = async (req, res) => {
+  const token = req.cookies.token; // ✅ Get token from cookies instead of headers
 
+  
   if (!token) return res.status(401).json({ message: "Unauthorized!" });
 
   try {
