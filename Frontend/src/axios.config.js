@@ -1,11 +1,9 @@
 // axios.config.js
 import axios from "axios";
 
-// Use environment variables for different environments
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
 
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "https://skill-sensei-yxti.onrender.com/api/v1",
   withCredentials: true, // To send cookies along with requests
 });
 
