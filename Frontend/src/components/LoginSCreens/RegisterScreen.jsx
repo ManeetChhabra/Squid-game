@@ -41,7 +41,7 @@ const RegisterScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post("/api/v1/user/register", formData);
+      const response = await api.post("/user/register", formData);
       setSuccess(response.data.message);
       setError("");
       setFormData({ name: "", email: "", password: "", role: "student", skills: [] });
