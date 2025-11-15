@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import {api} from "../../axios.config";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const JobList = () => {
@@ -10,8 +10,8 @@ const JobList = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:3015/api/v1/jobs", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        const response = await api.get("/jobs", {
+          withCredentials: true,
         });
         setJobs(response.data);
       } catch (error) {
@@ -35,7 +35,7 @@ const JobList = () => {
     try {
       console.log("🟢 Applying for Job ID:", jobId);
   
-      const userResponse = await axios.get("http://localhost:3015/api/v1/user/authcheck", {
+      const userResponse = await api.get("user/authcheck", {
         withCredentials: true, // ✅ Ensures cookies are sent
       });
   
@@ -58,8 +58,8 @@ const JobList = () => {
   
       console.log("🟢 Sending Form Data:", formData);
   
-      const response = await axios.post(
-        `http://localhost:3015/api/v1/jobs/apply/${jobId}`,
+      const response = await api.post(
+        `jobs/apply/${jobId}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
